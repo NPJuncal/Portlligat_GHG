@@ -1,6 +1,6 @@
 ################################################################################
 # Article: GHG Portlligat
-# xxx xxx (1/n)
+# Greehouse gas fluxes (1/n)
 # V 1.0
 # Year: 2026
 ################################################################################
@@ -8,10 +8,10 @@
 
 #load libraries 
 
-library(ggplot2)
-library(dplyr)
+library(tidyverse)
 library(ggpubr)
 library(cowplot)
+library(BlueCarbon)
 
 #create folder to save tables and graphs
 
