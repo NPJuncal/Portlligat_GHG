@@ -6,42 +6,17 @@
 ################################################################################
 
 
-#load libraries 
-
-library(tidyverse)
-library(ggpubr)
-library(cowplot)
-library(BlueCarbon)
-
-#create folder to save tables and graphs
-
-dir.create("results")
-
-#load data
-
-File<-"data/portlligat_2021.csv"
-
-A<-read.csv(File, header=T, sep=";", dec=".", fileEncoding="latin1")
-A<-as.data.frame(A)
-
-
-
 # summary table -----------------------------------------------------------
 
-summary_table<-as.data.frame(aggregate(CO2 ~ Station, data = A, mean)[,1])
-summary_table$CO2<-as.data.frame(aggregate(CO2 ~ Station, data = A, mean)[,2])
-summary_table$CO2_sd<-as.data.frame(aggregate(CO2 ~ Station, data = A, sd)[,2])
+summary_table <- aggregate(CO2_flux ~ Station, data = A, mean)
+summary_table$CO2_sd<-aggregate(CO2_flux ~ Station, data = A, sd)[,2]
+
+summary_table$CH4<-aggregate(CH4_flux ~ Station, data = A, mean)[,2]
+summary_table$CH4_sd<-aggregate(CH4_flux ~ Station, data = A, sd)[,2]
 
 
-summary_table$CH4<-as.data.frame(aggregate(CH4 ~ Station, data = A, mean)[,2])
-summary_table$CH4_sd<-as.data.frame(aggregate(CH4 ~ Station, data = A, sd)[,2])
-
-
-summary_table$N2O<-as.data.frame(aggregate(N2O ~ Station, data = A, mean)[,2])
-summary_table$N2O_sd<-as.data.frame(aggregate(N2O ~ Station, data = A, sd)[,2])
-
-
-colnames(summary_table)<-c("station", "CO2", "C2O_sd", "CH4", "CH4_sd","N2O", "N2O_sd")
+summary_table$N2O<-aggregate(N2O_flux ~ Station, data = A, mean)[,2]
+summary_table$N2O_sd<-aggregate(N2O_flux ~ Station, data = A, sd)[,2]
 
 write.csv(summary_table, file.path("results","summary_flux.csv"), row.names = FALSE)
 
@@ -61,7 +36,7 @@ my_comparisons2 <- list(
 
 
 p1<-
-  ggplot(A,aes(Station, CO2))+
+  ggplot(A,aes(Station, CO2_flux))+
   ylab(expression(paste("C",O[2], " (micromol"," ", m^-2, h^-1,")")))+
   geom_boxplot()+
   geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5)+
@@ -79,12 +54,12 @@ p1<-
   
 
 p2<-
-  ggplot(A,aes(Station, CH4))+
+  ggplot(A,aes(Station, CH4_flux))+
   ylab(expression(paste("C",H[4], " (micromol"," ", m^-2, h^-1,")")))+
   geom_boxplot()+
   geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5)+
   geom_hline(yintercept=0)+
-  ylim(-0.04,0.1)+
+  ylim(-0.05,0.1)+
   stat_compare_means(comparisons = my_comparisons,
                      method = "wilcox.test",
                      p.adjust.method = "holm",
@@ -100,7 +75,7 @@ p2<-
 
 
 p3<-
-  ggplot(A,aes(Station, N2O))+
+  ggplot(A,aes(Station, N2O_flux))+
   ylab(expression(paste(N[2],"O (micromol"," ", m^-2, h^-1,")")))+
   geom_boxplot()+
   geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5)+
@@ -131,15 +106,28 @@ plot_fluxes
 ggsave(file.path("results","fluxes.png"), width = 24, height = 9, units = "cm")
 
 
+# daily emissions and CO2 eq ----------------------------------------------
 
-#sediment data
+# dead CO2
+summary_table[1,2]*12+summary_table[2,2]*12
+
+full_day<-data.frame(station=c("living", "dead"))
+
+full_day[1,"CO2"]<-summary_table[3,2]*12+summary_table[4,2]*12
+full_day[2,"CO2"]<-summary_table[1,2]*12+summary_table[2,2]*12
+
+full_day[1,"CH4"]<-summary_table[3,4]*12+summary_table[4,4]*12
+full_day[2,"CH4"]<-summary_table[1,4]*12+summary_table[2,4]*12
+
+full_day[1,"N2O"]<-summary_table[3,6]*12+summary_table[4,6]*12
+full_day[2,"N2O"]<-summary_table[1,6]*12+summary_table[2,6]*12
+
+full_day[1,"CO2eq"]<-full_day[1,"CO2"]+(full_day[1,"CH4"]*27)
+                      +(full_day[1,"N2O"]*298)
+
+full_day[2,"CO2eq"]<-full_day[2,"CO2"]+(full_day[2,"CH4"]*27)
+                      +(full_day[2,"N2O"]*298)
+
+write.csv(full_day, file.path("results","full_day.csv"), row.names = FALSE)
 
 
-ggplot(A[c(1:12),],aes(Station, OM))+
-  geom_boxplot()+
-  geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5)
-
-
-
-plot(A$CH4, A$OM)
-plot(A$CH4, A$Rhizoms)
