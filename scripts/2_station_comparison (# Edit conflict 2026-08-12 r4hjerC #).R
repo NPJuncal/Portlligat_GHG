@@ -1,6 +1,6 @@
 ################################################################################
 # Article: GHG Portlligat
-# Greehouse gas fluxes (1/n)
+# Station comparison (2/n)
 # V 1.0
 # Year: 2026
 ################################################################################
@@ -59,18 +59,18 @@ p2<-
   geom_boxplot()+
   geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5)+
   geom_hline(yintercept=0)+
-  ylim(-0.05,0.1)+
+  ylim(-0.03,0.065)+
   stat_compare_means(comparisons = my_comparisons,
                      method = "wilcox.test",
                      p.adjust.method = "holm",
                      label = "p.signif",
-                     label.y = c(0.06, 0.075),
+                     label.y = c(0.035, 0.05),
                      tip.length = 0.005)+
     stat_compare_means(comparisons = my_comparisons2,
                        method = "wilcox.test",
                        p.adjust.method = "holm",
                        label = "p.signif",
-                       label.y = c(-0.04, -0.05),
+                       label.y = c(-0.025, -0.03),
                        tip.length = -0.005)
 
 
