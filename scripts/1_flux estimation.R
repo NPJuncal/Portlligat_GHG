@@ -37,16 +37,16 @@ A[,c(3:8)]<-A[,c(3:8)]/1000
 #(mg final time - mg initial time) / time / area
 # chamber anchor area 0.0314 m2
 
-A$CH4_flux<-(((A$CH4.Tf*A$vf)-(A$CH4.Ti*A$vi))/A$time)*0.0314
-A$CO2_flux<-(((A$CO2.Tf*A$vf)-(A$CO2.Ti*A$vi))/A$time)*0.0314
-A$N2O_flux<-(((A$N2O.Tf*A$vf)-(A$N2O.Ti*A$vi))/A$time)*0.0314
+A$CH4_flux<-((A$CH4.Tf*A$vf)-(A$CH4.Ti*A$vi))/(A$time*0.0314)
+A$CO2_flux<-((A$CO2.Tf*A$vf)-(A$CO2.Ti*A$vi))/(A$time*0.0314)
+A$N2O_flux<-((A$N2O.Tf*A$vf)-(A$N2O.Ti*A$vi))/(A$time*0.0314)
 
-#transform from mg m2 h to micromol m2 h
+#transform from mg m2 h to mmol m2 h
 
-A$CO2_flux<-A$CO2_flux*0.0227*1000
-A$N2O_flux<-A$N2O_flux*0.0227*1000
+A$CO2_flux<-A$CO2_flux*0.0227
+A$N2O_flux<-A$N2O_flux*0.0227
 
-A$CH4_flux<-A$CH4_flux*0.062*1000
+A$CH4_flux<-A$CH4_flux*0.062
 
 
 # built final table -------------------------------------------------------

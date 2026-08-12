@@ -37,7 +37,7 @@ my_comparisons2 <- list(
 
 p1<-
   ggplot(A,aes(Station, CO2_flux))+
-  ylab(expression(paste("C",O[2], " (micromol"," ", m^-2, h^-1,")")))+
+  ylab(expression(paste("C",O[2], " (mmol"," ", m^-2, h^-1,")")))+
   geom_boxplot()+
   geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5)+
   geom_hline(yintercept=0)+
@@ -55,7 +55,7 @@ p1<-
 
 p2<-
   ggplot(A,aes(Station, CH4_flux))+
-  ylab(expression(paste("C",H[4], " (micromol"," ", m^-2, h^-1,")")))+
+  ylab(expression(paste("C",H[4], " (mmol"," ", m^-2, h^-1,")")))+
   geom_boxplot()+
   geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5)+
   geom_hline(yintercept=0)+
@@ -76,7 +76,7 @@ p2<-
 
 p3<-
   ggplot(A,aes(Station, N2O_flux))+
-  ylab(expression(paste(N[2],"O (micromol"," ", m^-2, h^-1,")")))+
+  ylab(expression(paste(N[2],"O (mmol"," ", m^-2, h^-1,")")))+
   geom_boxplot()+
   geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5)+
   geom_hline(yintercept=0) +
@@ -129,5 +129,22 @@ full_day[2,"CO2eq"]<-full_day[2,"CO2"]+(full_day[2,"CH4"]*27)
                       +(full_day[2,"N2O"]*298)
 
 write.csv(full_day, file.path("results","full_day.csv"), row.names = FALSE)
+
+mmol_m2_h<-full_day
+mmol_m2_h[,c(2:5)]<-(mmol_m2_h[,c(2:5)])/24
+
+  
+# comparison with published data ------------------------------------------
+
+File<-"data/literature.csv"
+
+literature<-read.csv(File, header=T, sep=";", dec=".", fileEncoding="latin1")
+literature<-as.data.frame(literature)
+
+
+
+
+
+
 
 
