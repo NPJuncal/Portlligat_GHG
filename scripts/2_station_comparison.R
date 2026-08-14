@@ -108,30 +108,32 @@ ggsave(file.path("results","fluxes.png"), width = 24, height = 9, units = "cm")
 
 # daily emissions and CO2 eq ----------------------------------------------
 
-# dead CO2
+# in mg m2 d
+
 summary_table[1,2]*12+summary_table[2,2]*12
 
 full_day<-data.frame(station=c("living", "dead"))
 
-full_day[1,"CO2"]<-summary_table[3,2]*12+summary_table[4,2]*12
-full_day[2,"CO2"]<-summary_table[1,2]*12+summary_table[2,2]*12
+full_day[1,"CO2"]<-(summary_table[3,2]*12+summary_table[4,2]*12)/0.0227
+full_day[2,"CO2"]<-(summary_table[1,2]*12+summary_table[2,2]*12)/0.0227
 
-full_day[1,"CH4"]<-summary_table[3,4]*12+summary_table[4,4]*12
-full_day[2,"CH4"]<-summary_table[1,4]*12+summary_table[2,4]*12
+full_day[1,"CH4"]<-(summary_table[3,4]*12+summary_table[4,4]*12)/0.062
+full_day[2,"CH4"]<-(summary_table[1,4]*12+summary_table[2,4]*12)/0.062
 
-full_day[1,"N2O"]<-summary_table[3,6]*12+summary_table[4,6]*12
-full_day[2,"N2O"]<-summary_table[1,6]*12+summary_table[2,6]*12
+full_day[1,"N2O"]<-(summary_table[3,6]*12+summary_table[4,6]*12)/0.0227
+full_day[2,"N2O"]<-(summary_table[1,6]*12+summary_table[2,6]*12)/0.0227
+
+# it must be as mass and not mols before multiplying by the global warming potentials
 
 full_day[1,"CO2eq"]<-full_day[1,"CO2"]+(full_day[1,"CH4"]*27)
-                      +(full_day[1,"N2O"]*298)
+                      +(full_day[1,"N2O"]*273)
 
 full_day[2,"CO2eq"]<-full_day[2,"CO2"]+(full_day[2,"CH4"]*27)
-                      +(full_day[2,"N2O"]*298)
+                      +(full_day[2,"N2O"]*273)
 
 write.csv(full_day, file.path("results","full_day.csv"), row.names = FALSE)
 
-mmol_m2_h<-full_day
-mmol_m2_h[,c(2:5)]<-(mmol_m2_h[,c(2:5)])/24
+
 
   
 # comparison with published data ------------------------------------------
