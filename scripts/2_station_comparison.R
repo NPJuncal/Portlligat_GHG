@@ -6,6 +6,7 @@
 ################################################################################
 
 
+
 # summary table -----------------------------------------------------------
 
 summary_table <- aggregate(CO2_flux ~ Station, data = A, mean)
@@ -134,19 +135,12 @@ full_day[2,"CO2eq"]<-full_day[2,"CO2"]+(full_day[2,"CH4"]*27)
 write.csv(full_day, file.path("results","full_day.csv"), row.names = FALSE)
 
 
+# correlation with OM and number of rhizomes
 
-  
-# comparison with published data ------------------------------------------
+library(rstatix)
 
-File<-"data/literature.csv"
-
-literature<-read.csv(File, header=T, sep=";", dec=".", fileEncoding="latin1")
-literature<-as.data.frame(literature)
-
-
-
-
-
+cor.mat <- cor_mat(A[,c(12:14, 19:20)])
+cor_get_pval(cor.mat)
 
 
 
