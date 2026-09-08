@@ -118,19 +118,34 @@ full_day<-data.frame(station=c("living", "dead"))
 full_day[1,"CO2"]<-(summary_table[3,2]*12+summary_table[4,2]*12)/0.0227
 full_day[2,"CO2"]<-(summary_table[1,2]*12+summary_table[2,2]*12)/0.0227
 
+full_day[1,"CO2sd"]<-(summary_table[3,3]*12+summary_table[4,3]*12)/0.0227
+full_day[2,"CO2sd"]<-(summary_table[1,3]*12+summary_table[2,3]*12)/0.0227
+
+
 full_day[1,"CH4"]<-(summary_table[3,4]*12+summary_table[4,4]*12)/0.062
 full_day[2,"CH4"]<-(summary_table[1,4]*12+summary_table[2,4]*12)/0.062
+
+full_day[1,"CH4sd"]<-(summary_table[3,5]*12+summary_table[4,5]*12)/0.062
+full_day[2,"CH4sd"]<-(summary_table[1,5]*12+summary_table[2,5]*12)/0.062
 
 full_day[1,"N2O"]<-(summary_table[3,6]*12+summary_table[4,6]*12)/0.0227
 full_day[2,"N2O"]<-(summary_table[1,6]*12+summary_table[2,6]*12)/0.0227
 
+full_day[1,"N2Osd"]<-(summary_table[3,7]*12+summary_table[4,7]*12)/0.0227
+full_day[2,"N2Osd"]<-(summary_table[1,7]*12+summary_table[2,7]*12)/0.0227
+
 # it must be as mass and not mols before multiplying by the global warming potentials
 
-full_day[1,"CO2eq"]<-full_day[1,"CO2"]+(full_day[1,"CH4"]*27)
-                      +(full_day[1,"N2O"]*273)
+full_day[1,"CO2eq"]<-full_day[1,"CO2"]+(full_day[1,"CH4"]*27) +(full_day[1,"N2O"]*273)
 
-full_day[2,"CO2eq"]<-full_day[2,"CO2"]+(full_day[2,"CH4"]*27)
-                      +(full_day[2,"N2O"]*273)
+full_day[1,"CO2eq_sd"]<-full_day[1,"CO2sd"]+(full_day[1,"CH4sd"]*27)+(full_day[1,"N2Osd"]*273)
+
+full_day[2,"CO2eq"]<-full_day[2,"CO2"]+(full_day[2,"CH4"]*27)+(full_day[2,"N2O"]*273)
+
+full_day[2,"CO2eq_sd"]<-full_day[2,"CO2sd"]+(full_day[2,"CH4sd"]*27)+(full_day[2,"N2Osd"]*273)
+
+
+
 
 write.csv(full_day, file.path("results","full_day.csv"), row.names = FALSE)
 
